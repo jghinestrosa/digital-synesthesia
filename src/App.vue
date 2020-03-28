@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { createWaveHeader, createBufferToListen } from './utils/buffer-handler';
+import createBufferToListen from './utils/wave-pcm';
 import { decodeAudioFile, playAudioFile } from './utils/audio';
 
 export default {

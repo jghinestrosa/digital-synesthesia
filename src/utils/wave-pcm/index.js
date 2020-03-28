@@ -82,7 +82,7 @@ export function createWaveHeader({
   return waveHeaderBuffer;
 }
 
-export function createBufferToListen({ fileBuffer }) {
+export default function createBufferToListen({ fileBuffer }) {
   const { byteLength: fileByteLength } = fileBuffer;
 
   const waveHeaderBuffer = createWaveHeader({ fileByteLength });
