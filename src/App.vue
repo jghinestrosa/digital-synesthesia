@@ -8,6 +8,7 @@
         <label for="file-selector">Load the file you want to listen to</label>
         <input id="file-selector" type="file" v-on:change="onFileLoaded" />
       </section>
+      <AudioFormatSelector></AudioFormatSelector>
       <section class="buttons">
         <button v-on:click="decode" v-bind:disabled="!file">Decode</button>
         <button v-on:click="play" v-bind:disabled="!audioBuffer">Play</button>
@@ -19,9 +20,13 @@
 <script>
 import createBufferToListen from './utils/wave-pcm';
 import { decodeAudioFile, playAudioFile } from './utils/audio';
+import AudioFormatSelector from './components/AudioFormatSelector';
 
 export default {
   name: 'app',
+  components: {
+    AudioFormatSelector
+  },
   data: function() {
     return {
       file: null,
