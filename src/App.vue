@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <h1>Let the file sound</h1>
+      <h1>Digital Synesthesia</h1>
     </header>
     <main>
       <MediaSelector></MediaSelector>
