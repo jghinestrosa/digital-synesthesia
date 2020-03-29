@@ -24,7 +24,7 @@
         value="image"
         v-model="selectedMedia"
       />
-      <label for="media-video">Image</label>
+      <label for="media-image">Image</label>
     </section>
     <AudioManager v-show="hasToShowAudioManager"></AudioManager>
   </main>
