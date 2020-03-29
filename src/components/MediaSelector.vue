@@ -1,7 +1,6 @@
 <template>
   <main>
     <section class="media-selection">
-      <label for="media-audio">Audio</label>
       <input
         type="radio"
         name="media-audio"
@@ -9,7 +8,7 @@
         value="audio"
         v-model="selectedMedia"
       />
-      <label for="media-video">Video</label>
+      <label for="media-audio">Audio</label>
       <input
         type="radio"
         name="media-video"
@@ -17,6 +16,15 @@
         value="video"
         v-model="selectedMedia"
       />
+      <label for="media-video">Video</label>
+      <input
+        type="radio"
+        name="media-image"
+        id="media-image"
+        value="image"
+        v-model="selectedMedia"
+      />
+      <label for="media-video">Image</label>
     </section>
     <AudioManager v-show="hasToShowAudioManager"></AudioManager>
   </main>
