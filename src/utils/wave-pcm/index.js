@@ -82,10 +82,20 @@ export function createWaveHeader({
   return waveHeaderBuffer;
 }
 
-export default function createBufferToListen({ fileBuffer }) {
+export default function createBufferToListen({
+  fileBuffer,
+  numChannels,
+  sampleRate,
+  bitsPerSample
+}) {
   const { byteLength: fileByteLength } = fileBuffer;
 
-  const waveHeaderBuffer = createWaveHeader({ fileByteLength });
+  const waveHeaderBuffer = createWaveHeader({
+    fileByteLength,
+    numChannels,
+    sampleRate,
+    bitsPerSample
+  });
   return new Uint8Array([
     ...new Uint8Array(waveHeaderBuffer),
     ...new Uint8Array(fileBuffer)
