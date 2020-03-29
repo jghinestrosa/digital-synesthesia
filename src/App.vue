@@ -3,9 +3,7 @@
     <header>
       <h1>Digital Synesthesia</h1>
     </header>
-    <main>
-      <MediaSelector></MediaSelector>
-    </main>
+    <MediaSelector></MediaSelector>
   </div>
 </template>
 
@@ -17,12 +15,10 @@ export default {
   components: {
     MediaSelector
   },
-  data: function() {
-    return {
-    };
+  data: function () {
+    return {};
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 

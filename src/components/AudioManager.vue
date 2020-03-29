@@ -1,29 +1,56 @@
 <template>
-  <section>
+  <section class="audio-manager">
     <section class="file">
       <label for="file-selector">Load the file you want to listen to</label>
       <input id="file-selector" type="file" v-on:change="onFileLoaded" />
     </section>
-    <fieldset class="audio-format-selector">
-      <legend>Audio Format</legend>
-      <input
-        type="radio"
-        name="audio-format"
-        id="audio-format-wave-pcm"
-        value="wave-pcm"
-        v-model="selectedFormat"
-      />
-      <label for="audio-format-wave-pcm">WAVE PCM</label>
-    </fieldset>
-    <fieldset class="audio-parameters">
-      <legend>Parameters</legend>
-      <label for="sample-rate">Sample Rate:</label>
-      <input type="number" name="sample-rate" id="sample-rate" v-model="sampleRate" />
-      <label for="number-channels">Number of Channels:</label>
-      <input type="number" name="number-channels" id="number-channels" v-model="numberOfChannels" />
-      <label for="bits-per-sample">Bits per Sample:</label>
-      <input type="number" name="bits-per-sample" id="bits-per-sample" v-model="bitsPerSample" />
-    </fieldset>
+    <section>
+      <fieldset class="audio-format-selector">
+        <legend>Audio Format</legend>
+        <input
+          type="radio"
+          name="audio-format"
+          id="audio-format-wave-pcm"
+          value="wave-pcm"
+          v-model="selectedFormat"
+        />
+        <label for="audio-format-wave-pcm">WAVE PCM</label>
+      </fieldset>
+    </section>
+    <section>
+      <fieldset class="audio-parameters">
+        <legend>Parameters</legend>
+        <ul>
+          <li>
+            <label for="sample-rate">Sample Rate:</label>
+            <input
+              type="number"
+              name="sample-rate"
+              id="sample-rate"
+              v-model="sampleRate"
+            />
+          </li>
+          <li>
+            <label for="number-channels">Number of Channels:</label>
+            <input
+              type="number"
+              name="number-channels"
+              id="number-channels"
+              v-model="numberOfChannels"
+            />
+          </li>
+          <li>
+            <label for="bits-per-sample">Bits per Sample:</label>
+            <input
+              type="number"
+              name="bits-per-sample"
+              id="bits-per-sample"
+              v-model="bitsPerSample"
+            />
+          </li>
+        </ul>
+      </fieldset>
+    </section>
     <section class="buttons">
       <button v-on:click="decode" v-bind:disabled="!file">Decode</button>
       <button v-on:click="play" v-bind:disabled="!audioBuffer">Play</button>
@@ -36,7 +63,7 @@ import createBufferToListen from '../utils/wave-pcm';
 import { decodeAudioFile, playAudioFile } from '../utils/audio';
 
 export default {
-  data: function() {
+  data: function () {
     return {
       file: null,
       audioBuffer: null,
@@ -47,23 +74,28 @@ export default {
     };
   },
   methods: {
-    onFileLoaded: function(event) {
-      const [ file ] = event.target.files;
+    onFileLoaded: function (event) {
+      const [file] = event.target.files;
       this.file = file;
       this.audioBuffer = null;
     },
-    decode: function() {
-      this.file.arrayBuffer()
-        .then((fileBuffer) => createBufferToListen({ fileBuffer, ...this.audioParameters }))
+    decode: function () {
+      this.file
+        .arrayBuffer()
+        .then(fileBuffer =>
+          createBufferToListen({ fileBuffer, ...this.audioParameters })
+        )
         .then(decodeAudioFile)
-        .then((audioBuffer) => { this.audioBuffer = audioBuffer; });
+        .then(audioBuffer => {
+          this.audioBuffer = audioBuffer;
+        });
     },
-    play: function() {
+    play: function () {
       playAudioFile(this.audioBuffer);
-    },
+    }
   },
   computed: {
-    audioParameters: function() {
+    audioParameters: function () {
       const { sampleRate, numberOfChannels, bitsPerSample } = this;
       return {
         sampleRate,
@@ -72,13 +104,39 @@ export default {
       };
     }
   }
-}
+};
 </script>
 
 <style scoped>
+.audio-manager {
+  text-align: center;
+}
+
+.file {
+  margin: 3em;
+}
+
 fieldset {
   display: inline-block;
   min-width: 30vw;
   margin: 0.3em;
+}
+
+legend {
+  text-align: left;
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+li label {
+  margin-right: 1.5em;
 }
 </style>

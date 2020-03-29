@@ -1,11 +1,25 @@
 <template>
-  <section class="media-selection">
-    <label for="media-audio">Audio</label>
-    <input type="radio" name="media-audio" id="media-audio" value="audio" v-model="selectedMedia" />
-    <label for="media-video">Video</label>
-    <input type="radio" name="media-video" id="media-video" value="video" v-model="selectedMedia" />
+  <main>
+    <section class="media-selection">
+      <label for="media-audio">Audio</label>
+      <input
+        type="radio"
+        name="media-audio"
+        id="media-audio"
+        value="audio"
+        v-model="selectedMedia"
+      />
+      <label for="media-video">Video</label>
+      <input
+        type="radio"
+        name="media-video"
+        id="media-video"
+        value="video"
+        v-model="selectedMedia"
+      />
+    </section>
     <AudioManager v-show="hasToShowAudioManager"></AudioManager>
-  </section>
+  </main>
 </template>
 
 <script>
@@ -15,17 +29,17 @@ export default {
   components: {
     AudioManager
   },
-  data: function() {
+  data: function () {
     return {
       selectedMedia: 'audio'
     };
   },
   computed: {
-    hasToShowAudioManager: function() {
+    hasToShowAudioManager: function () {
       return this.selectedMedia === 'audio';
     }
   }
-}
+};
 </script>
 
 <style scoped>
