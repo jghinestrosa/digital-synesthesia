@@ -61,6 +61,7 @@
 <script>
 import createBufferToListen from '../utils/wave-pcm';
 import { decodeAudioFile, playAudioFile } from '../utils/audio';
+import { readFileAsArrayBuffer } from '../utils/files';
 
 export default {
   data: function () {
@@ -80,8 +81,7 @@ export default {
       this.audioBuffer = null;
     },
     decode: function () {
-      this.file
-        .arrayBuffer()
+      readFileAsArrayBuffer(this.file)
         .then(fileBuffer =>
           createBufferToListen({ fileBuffer, ...this.audioParameters })
         )
