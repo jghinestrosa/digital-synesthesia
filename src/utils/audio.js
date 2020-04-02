@@ -28,19 +28,20 @@ export function createOscillatorsFromHistogram(
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   const context = new AudioContext();
 
-  return histogram
-    .map(value => {
-      const oscillator = context.createOscillator();
-      const frequency =
-        (value * maxAudioFrequency) / maxHistogramValidValue +
-        minAudioFrequency;
-      oscillator.type = 'square';
-      console.log('>> color value:', value, 'frequency', frequency);
-      oscillator.frequency.setValueAtTime(frequency, context.currentTime); // value in hertz
-      oscillator.connect(context.destination);
-      return oscillator;
-    })
-    .slice(0, 8);
+  return histogram.map((value, index) => {
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
+    const gain = value / maxHistogramValidValue;
+    const frequency =
+      (index * (maxAudioFrequency - minAudioFrequency)) / 255 +
+      minAudioFrequency;
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(frequency, context.currentTime); // value in hertz
+    gainNode.gain.setValueAtTime(gain, context.currentTime);
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    return oscillator;
+  });
 }
 
 export function playHistogramWithOscillators(oscillators) {
