@@ -35,7 +35,6 @@ export function createOscillatorsFromHistogram(
     const frequency =
       (index * (maxAudioFrequency - minAudioFrequency)) / 255 +
       minAudioFrequency;
-    oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(frequency, context.currentTime); // value in hertz
     gainNode.gain.setValueAtTime(gain, context.currentTime);
     oscillator.connect(gainNode);

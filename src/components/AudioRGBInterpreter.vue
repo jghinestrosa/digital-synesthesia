@@ -10,7 +10,8 @@
     </figure>
     <canvas ref="histogramCanvas" width="256" height="100"></canvas>
     <section class="buttons">
-      <button v-on:click="play" v-bind:disabled="!histogram">Play</button>
+      <button v-on:click="play" v-bind:disabled="!canPlay">Play</button>
+      <button v-on:click="stop" v-bind:disabled="!isPlaying">Stop</button>
     </section>
   </section>
 </template>
@@ -27,11 +28,16 @@ export default {
     return {
       file: null,
       image: {},
-      histogram: null
+      histogram: null,
+      playerStatus: 'notReady'
     };
   },
   methods: {
     onFileLoaded: function (event) {
+      if (this.playerStatus === 'playing') {
+        this.stop();
+      }
+      this.playerStatus = 'notReady';
       const [file] = event.target.files;
       this.file = file;
       readFileAsDataURL(file)
@@ -42,15 +48,26 @@ export default {
           const histogram = createHistogram(imageData);
           this.histogram = histogram;
           paintHistogram(this.$refs.histogramCanvas, histogram);
+          this.playerStatus = 'ready';
         });
     },
-    play: function () {
+    createOscillators: function() {
       const channelR = this.histogram.map(({ r }) => r);
       const channelG = this.histogram.map(({ g }) => g);
       const channelB = this.histogram.map(({ b }) => b);
-      createOscillatorsFromHistogram(channelR, Math.max.apply(null, channelR), 100, 4000).forEach((oscillator) => oscillator.start());
-      createOscillatorsFromHistogram(channelG, Math.max.apply(null, channelG), 100, 4000).forEach((oscillator) => oscillator.start());
-      createOscillatorsFromHistogram(channelB, Math.max.apply(null, channelB), 100, 4000).forEach((oscillator) => oscillator.start());
+      const oscillatorR = createOscillatorsFromHistogram(channelR, Math.max.apply(null, channelR), 100, 4000);
+      const oscillatorG = createOscillatorsFromHistogram(channelG, Math.max.apply(null, channelG), 100, 4000);
+      const oscillatorB = createOscillatorsFromHistogram(channelB, Math.max.apply(null, channelB), 100, 4000);
+      this.oscillators = [...oscillatorR, ...oscillatorG, ...oscillatorB];
+    },
+    play: function () {
+      this.createOscillators();
+      this.oscillators.forEach((oscillator) => oscillator.start());
+      this.playerStatus = 'playing';
+    },
+    stop: function() {
+      this.oscillators.forEach((oscillator) => oscillator.stop());
+      this.playerStatus = 'ready';
     }
   },
   computed: {
@@ -59,6 +76,12 @@ export default {
     },
     imageUrl: function () {
       return this.image ? this.image.src : '';
+    },
+    canPlay: function() {
+      return this.playerStatus === 'ready';
+    },
+    isPlaying: function() {
+      return this.playerStatus === 'playing';
     }
   }
 }

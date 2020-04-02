@@ -35,7 +35,7 @@ export default {
   },
   data: function () {
     return {
-      interpreter: 'raw'
+      interpreter: 'rgb'
     };
   },
   methods: {
