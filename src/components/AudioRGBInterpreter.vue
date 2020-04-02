@@ -10,7 +10,7 @@
     </figure>
     <canvas ref="histogramCanvas" width="256" height="100"></canvas>
     <section class="buttons">
-      <button v-on:click="play" v-bind:disabled="true">Play</button>
+      <button v-on:click="play" v-bind:disabled="!histogram">Play</button>
     </section>
   </section>
 </template>
@@ -20,12 +20,14 @@ import { readFileAsDataURL } from '../utils/files';
 import { getImageData, paintHistogram } from '../utils/canvas';
 import { loadImage } from '../utils/image';
 import { createHistogram } from '../utils/image-processing';
+import { createOscillatorsFromHistogram } from '../utils/audio';
 
 export default {
   data: function () {
     return {
       file: null,
-      image: {}
+      image: {},
+      histogram: null
     };
   },
   methods: {
@@ -38,10 +40,18 @@ export default {
           this.image = image;
           const imageData = getImageData(image);
           const histogram = createHistogram(imageData);
+          this.histogram = histogram;
           paintHistogram(this.$refs.histogramCanvas, histogram);
         });
     },
-    play: function () { }
+    play: function () {
+      const channelR = this.histogram.map(({ r }) => r);
+      const channelG = this.histogram.map(({ g }) => g);
+      const channelB = this.histogram.map(({ b }) => b);
+      createOscillatorsFromHistogram(channelR, Math.max.apply(null, channelR), 100, 4000).forEach((oscillator) => oscillator.start());
+      createOscillatorsFromHistogram(channelG, Math.max.apply(null, channelG), 100, 4000).forEach((oscillator) => oscillator.start());
+      createOscillatorsFromHistogram(channelB, Math.max.apply(null, channelB), 100, 4000).forEach((oscillator) => oscillator.start());
+    }
   },
   computed: {
     fileName: function () {
